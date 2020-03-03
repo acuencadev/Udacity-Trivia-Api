@@ -23,7 +23,7 @@ class QuestionView extends Component {
 
   getQuestions = () => {
     $.ajax({
-      url: `http://localhost:5000/api/questions?page=${this.state.page}`, //TODO: update request URL
+      url: `http://localhost:5000/api/questions?page=${this.state.page}`,
       type: "GET",
       success: (result) => {
         this.setState({
@@ -60,7 +60,7 @@ class QuestionView extends Component {
 
   getByCategory= (id) => {
     $.ajax({
-      url: `/categories/${id}/questions`, //TODO: update request URL
+      url: `http://localhost:5000/api/categories/${id}/questions`,
       type: "GET",
       success: (result) => {
         this.setState({
