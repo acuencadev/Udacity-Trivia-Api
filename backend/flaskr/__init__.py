@@ -112,7 +112,8 @@ def create_app(test_config=None):
     })
 
   '''
-  @Create a POST endpoint to get questions based on a search term. 
+  @TODO:
+  Create a POST endpoint to get questions based on a search term. 
   It should return any questions for whom the search term 
   is a substring of the question. 
 
@@ -154,10 +155,40 @@ def create_app(test_config=None):
   '''
 
   '''
-  @TODO: 
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
+  @app.errorhandler(400)
+  def internal_error(error):
+    return jsonify({
+      'success': False,
+      'error': 400,
+      'message': "Bad request"
+    }), 400
+    
+  @app.errorhandler(404)
+  def not_found(error):
+    return jsonify({
+      'success': False,
+      'error': 404,
+      'message': "Not found"
+    }), 404
+    
+  @app.errorhandler(422)
+  def unprocessable(error):
+    return jsonify({
+      'success': False,
+      'error': 422,
+      'message': "Unprocessable"
+    }), 422
+    
+  @app.errorhandler(500)
+  def internal_error(error):
+    return jsonify({
+      'success': False,
+      'error': 500,
+      'message': "Internal Error"
+    }), 500
   
   return app
 
