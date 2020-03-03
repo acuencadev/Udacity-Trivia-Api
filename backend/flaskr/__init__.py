@@ -103,8 +103,7 @@ def create_app(test_config=None):
     new_question = Question(question=question, answer=answer,
                             difficulty=difficulty, category=category)
     
-    db.session.add(new_question)
-    db.session.commit()
+    new_question.insert()
     
     return jsonify({
       'success': True
