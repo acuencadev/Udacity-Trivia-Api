@@ -14,12 +14,12 @@ def create_app(test_config=None):
   setup_db(app)
   
   '''
-  @Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
+  Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
   cors = CORS(app, resources={r"/api/*": {'origins': "*"}})
 
   '''
-  @Use the after_request decorator to set Access-Control-Allow
+  Use the after_request decorator to set Access-Control-Allow
   '''
   @app.after_request
   def after_request(response):
@@ -29,7 +29,7 @@ def create_app(test_config=None):
     return response
 
   '''
-  @Create an endpoint to handle GET requests 
+  Create an endpoint to handle GET requests 
   for all available categories.
   '''
   @app.route('/api/categories', methods=['GET'])
@@ -38,11 +38,12 @@ def create_app(test_config=None):
     formatted_categories = { category.id : category.type for category in categories }
     
     return jsonify({
+      'success': True,
       'categories': formatted_categories
     })
 
   '''
-  @Create an endpoint to handle GET requests for questions, 
+  Create an endpoint to handle GET requests for questions, 
   including pagination (every 10 questions). 
   This endpoint should return a list of questions, 
   number of total questions, current category, categories. 
@@ -65,6 +66,7 @@ def create_app(test_config=None):
     formatted_categories = { category.id : category.type for category in categories }
     
     return jsonify({
+      'success': True,
       'questions': formatted_questions[start:end],
       'total_questions': len(formatted_questions),
       'categories': formatted_categories,
@@ -101,7 +103,7 @@ def create_app(test_config=None):
   '''
 
   '''
-  @Create a GET endpoint to get questions based on category. 
+  Create a GET endpoint to get questions based on category. 
 
   TEST: In the "List" tab / main screen, clicking on one of the 
   categories in the left column will cause only questions of that 
@@ -113,6 +115,7 @@ def create_app(test_config=None):
     formatted_questions = [question.format() for question in questions]
     
     return jsonify({
+      'success': True,
       'questions': formatted_questions,
       'total_questions': len(formatted_questions),
       'current_category': 1
