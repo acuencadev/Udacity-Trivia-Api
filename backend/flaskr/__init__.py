@@ -16,15 +16,18 @@ def create_app(test_config=None):
   '''
   Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
-  cors = CORS(app, resources={r"/api/*": {'origins': "*"}})
+  cors = CORS(app, with_credentials=True, resources={
+    r'/api/*': {'origins': "*"}
+  })
 
   '''
   Use the after_request decorator to set Access-Control-Allow
   '''
   @app.after_request
   def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,true")
-    response.headers.add('Access-Control-Allow-Methods', "GET,PATCH,POST,DELETE,OPTIONS")
+    response.headers.add('Access-Control-Allow-Headers', "Content-Type, Authorization")
+    response.headers.add('Access-Control-Allow-Methods', "GET, POST, PATCH, DELETE, OPTIONS")
+    response.headers.add('Access-Control-Allow-Credentials', "true")
     
     return response
 
@@ -33,7 +36,6 @@ def create_app(test_config=None):
   for all available categories.
   '''
   @app.route('/api/categories', methods=['GET'])
-  @cross_origin()
   def get_all_categories():
     categories = Category.query.all()
     formatted_categories = { category.id : category.type for category in categories }
@@ -55,7 +57,6 @@ def create_app(test_config=None):
   Clicking on the page numbers should update the questions. 
   '''
   @app.route('/api/questions', methods=['GET'])
-  @cross_origin()
   def get_questions():
     page = request.args.get('page', 1, type=int)
     start = (page - 1) * QUESTIONS_PER_PAGE
@@ -93,12 +94,13 @@ def create_app(test_config=None):
   of the questions list in the "List" tab.  
   '''
   @app.route('/api/questions', methods=['POST'])
-  @cross_origin()
   def create_question():
-    question = request.args.get('question', '', type=str)
-    answer = request.args.get('answer', '', type=str)
-    difficulty = request.args.get('difficulty', '', type=str)
-    category = request.args.get('category', type=int)
+    data = request.get_json()
+    
+    question = data['question']
+    answer = data['answer']
+    difficulty = data['difficulty']
+    category = data['category']
     
     new_question = Question(question=question, answer=answer,
                             difficulty=difficulty, category=category)
@@ -127,7 +129,6 @@ def create_app(test_config=None):
   category to be shown. 
   '''
   @app.route('/api/categories/<int:category>/questions', methods=['GET'])
-  @cross_origin()
   def get_questions_by_category(category):
     questions = Question.query.filter_by(category=category).all()
     formatted_questions = [question.format() for question in questions]
