@@ -128,7 +128,10 @@ def create_app(test_config=None):
   category to be shown. 
   '''
   @app.route('/api/categories/<int:category>/questions', methods=['GET'])
+<<<<<<< HEAD
   @cross_origin()
+=======
+>>>>>>> master
   def get_questions_by_category(category):
     questions = Question.query.filter_by(category=category).all()
     formatted_questions = [question.format() for question in questions]
