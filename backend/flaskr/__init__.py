@@ -181,9 +181,13 @@ def create_app(test_config=None):
   @app.route('/api/quizzes', methods=['POST'])
   def get_next_question():
     data = request.get_json()
-    previous_questions = data['previous_questions']
-    quiz_category = data['quiz_category']
     
+    try:
+      previous_questions = data['previous_questions']
+      quiz_category = data['quiz_category']
+    except KeyError:
+      abort(422)
+
     questions_filter = Question.query
     
     if quiz_category['id'] != 0:
