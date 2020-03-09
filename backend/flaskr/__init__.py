@@ -157,7 +157,7 @@ def create_app(test_config=None):
   '''
   @app.route('/api/categories/<int:category>/questions', methods=['GET'])
   def get_questions_by_category(category):
-    questions = Question.query.filter_by(category=category).all()
+    questions = Question.query.filter(Question.category==str(category)).all()
     formatted_questions = [question.format() for question in questions]
     
     return jsonify({
