@@ -108,10 +108,13 @@ def create_app(test_config=None):
   def create_question():
     data = request.get_json()
     
-    question = data['question']
-    answer = data['answer']
-    difficulty = data['difficulty']
-    category = data['category']
+    try:
+      question = data['question']
+      answer = data['answer']
+      difficulty = data['difficulty']
+      category = data['category']
+    except KeyError:
+      abort(422)
     
     new_question = Question(question=question, answer=answer,
                             difficulty=difficulty, category=category)
@@ -166,7 +169,6 @@ def create_app(test_config=None):
 
 
   '''
-  @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
   This endpoint should take category and previous question parameters 
   and return a random questions within the given category, 
