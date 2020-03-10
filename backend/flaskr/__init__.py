@@ -73,7 +73,7 @@ def create_app(test_config=None):
       'questions': formatted_questions[start:end],
       'total_questions': len(formatted_questions),
       'categories': formatted_categories,
-      'current_category': 1
+      'current_category': 0
     })
 
   '''
@@ -146,7 +146,7 @@ def create_app(test_config=None):
       'success': True,
       'questions': formatted_questions,
       'total_questions': len(formatted_questions),
-      'current_category': 1
+      'current_category': 0
     })
 
   '''
@@ -165,7 +165,7 @@ def create_app(test_config=None):
       'success': True,
       'questions': formatted_questions,
       'total_questions': len(formatted_questions),
-      'current_category': 1
+      'current_category': category
     })
 
 
