@@ -45,50 +45,162 @@ To run the server, execute:
 ```bash
 export FLASK_APP=flaskr
 export FLASK_ENV=development
+export DB_USERNAME=DB USER GOES HERE
+export DB_PASSWORD=DB PASSWORD GOES HERE
 flask run
 ```
 
 Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
 
-Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
+Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application.
 
-## Tasks
+Setting the `DB_USERNAME` and `DB_PASSWORD` to valid Postgres credentials allow the app to connect to the Database server.
 
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
+## Error Handling
 
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+Errors are returned as JSON objects in the following format:
 
 ```
+{
+    "success": False,
+    "error": 400,
+    "message": "Bad request"
+}
+```
 
+## Endpoints
+
+- GET '/api/categories'
+- GET '/api/categories/<int:category>/questions'
+- POST '/api/questions'
+- POST '/api/questions/search'
+- POST '/api/quizzes'
+- DELETE '/api/questions/<int:question_id>'
+
+**GET /api/categories**
+
+- General:
+  - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+  - Request Arguments: None
+  - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
+- Sample: `curl http://localhost:5000/api/categories`
+
+```
+{
+    "success": True,
+    "categories": {
+        '1' : "Science",
+        '2' : "Art",
+        '3' : "Geography",
+        '4' : "History",
+        '5' : "Entertainment",
+        '6' : "Sports"
+    }
+}
+```
+
+**GET /api/categories/<int:category>/questions**
+
+- General:
+  - Fetches a list of questions
+  - Request Arguments: category id
+  - Returns: An object with a success boolean, list of questions, total number of questions, and the current category. 
+- Sample: `curl http://localhost:5000/api/categories/2/questions`
+
+```
+{
+    "success": True,
+    "questions": [
+        {
+            "id": 1,
+            "question": "La Giaconda is better known as what?",
+            "answer": "Mona Lisa",
+            "difficulty": 3,
+            "category": 2
+
+        },
+        ...
+    ],
+    "total_questions": 3,
+    "current_category": 1
+}
+```
+
+**POST /api/questions**
+
+- General:
+  - Creates a new question
+  - Request Arguments: An JSON object containing the question, the answer, the difficulty and the category.
+  - Returns: Whether or not the question was created.
+- Sample: `curl http://localhost:5000/api/questions -X POST -H "Content-Type: application/json" -d '{"question": "Who am I?", "answer": "You are you", "difficulty": 5, "category": 1}'`
+
+```
+{
+    "success": True
+}
+```
+
+**POST /api/questions/search**
+
+- General:
+  - Search the database and look for questions that match the search term.
+  - Request Arguments: Search term to look for.
+  - Returns: List of qualifying questions.
+- Sample: `curl http://localhost:5000/api/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "What"}'`
+
+```
+{
+    "success": True,
+    "questions": [
+        {
+            "id": 1,
+            "question": "La Giaconda is better known as what?",
+            "answer": "Mona Lisa",
+            "difficulty": 3,
+            "category": 2
+
+        },
+        ...
+    ],
+    "total_questions": 10,
+    "current_category": 1
+}
+```
+
+**POST /api/quiz**
+
+- General:
+  - Return a random question from the Database. It excludes previous questions and limit the search to the matching category.
+  - Request Arguments: Quiz category and list of previous questions' ids.
+  - Returns: Random question.
+- Sample: `curl http://localhost:5000/api/quiz -X POST -H "Content-Type: application/json" -d '{"quiz_category": 1, "previous_questions": [1, 2, 3]}'`
+
+```
+{
+    "success": True,
+    "question": {
+        "id": 1,
+        "question": "La Giaconda is better known as what?",
+        "answer": "Mona Lisa",
+        "difficulty": 3,
+        "category": 2
+    }
+}
+```
+
+**DELETE /api/questions/<int:question_id>**
+
+- General:
+  - Delete a question from the database.
+  - Request Arguments: None.
+  - Returns: Whether or not the question was deleted.
+- Sample: `curl http://localhost:5000/api/questions/1 -X DELETE`
+
+```
+{
+    "success": True
+}
+```
 
 ## Testing
 To run the tests, run
