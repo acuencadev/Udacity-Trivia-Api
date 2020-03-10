@@ -99,7 +99,7 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-**GET /api/categories/<int:category>/questions**
+**GET /api/categories/id/questions**
 
 - General:
   - Fetches a list of questions
@@ -188,7 +188,7 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-**DELETE /api/questions/<int:question_id>**
+**DELETE /api/questions/id**
 
 - General:
   - Delete a question from the database.
