@@ -112,10 +112,6 @@ class TriviaTestCase(unittest.TestCase):
             self.db.session.execute("ALTER SEQUENCE questions_id_seq RESTART WITH 1")
             self.db.session.commit()
 
-    """
-    TODO
-    Write at least one test for each test for successful operation and for expected errors.
-    """
     def test_get_all_categories_return_200_and_empty_result(self):
         res = self.client().get('/api/categories')
         data = json.loads(res.data)

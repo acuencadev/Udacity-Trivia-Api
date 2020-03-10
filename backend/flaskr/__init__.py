@@ -143,6 +143,7 @@ def create_app(test_config=None):
     formatted_questions = [question.format() for question in questions]
     
     return jsonify({
+      'success': True,
       'questions': formatted_questions,
       'total_questions': len(formatted_questions),
       'current_category': 1
@@ -201,6 +202,7 @@ def create_app(test_config=None):
     formatted_question = random_question.format()
     
     return jsonify({
+      'success': True,
       'question': formatted_question
     })
 
